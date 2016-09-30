@@ -17,7 +17,7 @@ let sys = (function() {
 
   const checkForUser = (opts) => {
     if (!username) {
-      console.log('create a user with sys.user.')
+      console.log('create a user with sys.createUser.')
       return {}
     }
     return opts
@@ -63,7 +63,7 @@ let sys = (function() {
       return mud
     }
     if (!opts.name) {
-      console.log('{name} required');
+      console.log('{name} required.')
       return mud
     }
     if (opts.name in mud) { // e.g. 'sendMsg'
@@ -76,11 +76,42 @@ let sys = (function() {
     return mud
   }
 
+  mud.createScript = (opts) => {
+    if (!opts.name) {
+      console.log('{name} required.')
+      return mud
+    }
+    if (opts.name in mud[username]) { // e.g. 'sendMsg'
+      console.log(opts.name, 'is a reserved namespace.')
+      return mud
+    }
+    if (!opts.calls) {
+      console.log('{calls} required.')
+      return mud
+    }
+    var missingFn = opts.calls.find(call => {
+       return !(call.fn in mud)
+    })
+    if (missingFn) {
+      console.log('all calls must be made to valid methods.')
+      return mud
+    }
+    mud[username][opts.name] = () => {
+      opts.calls.forEach(call => {
+        mud[call.fn](call.opts || {})
+      })
+    }
+    console.log('script', opts.name, 'created.')
+    // TODO: upload script in user namespace
+    return mud
+  }
+
   mud = Object.assign(mud, {
     sendMsg: compose(updateSys, mud.sendMsg, checkForOpts, checkForUser),
     sendCreds: compose(updateSys, mud.sendCreds, checkForOpts, checkForUser),
     checkCreds: compose(updateSys, mud.checkCreds),
-    createUser: compose(updateSys, mud.createUser, checkForOpts)
+    createUser: compose(updateSys, mud.createUser, checkForOpts),
+    createScript: compose(updateSys, mud.createScript, checkForOpts, checkForUser)
   })
 
   return mud
