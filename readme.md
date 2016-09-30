@@ -20,7 +20,6 @@ sys.todd.sendCreds({amt: 10, plr: 'rod'}) // -> sent 10 credits to rod.
 ```
 ## Chainable function calls
 ```
-
 sys
   .createUser({name: 'todd'})
   .sendCreds({amt: 100, plr: 'rod'})
@@ -60,6 +59,7 @@ sys.createScript(
 
   // NOTE: This is if Todd called his own script.
   // Eventually, he would try to get Rod to call it.
+
   sys.todd.giveToddMoney()
   /**
    * ->
