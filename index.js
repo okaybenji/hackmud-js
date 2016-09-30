@@ -17,7 +17,7 @@ let sys = (function() {
 
   const checkForUser = (opts) => {
     if (!username) {
-      console.log('create a user with sys.user')
+      console.log('create a user with sys.user.')
       return {}
     }
     return opts
@@ -48,7 +48,7 @@ let sys = (function() {
     }
     credits -= opts.amt
     // TODO: send over socket
-    console.log('sent', opts.amt, 'credits to', opts.plr)
+    console.log('sent', opts.amt, 'credits to', opts.plr + '.')
     return mud
   }
 
@@ -79,7 +79,7 @@ let sys = (function() {
   mud = Object.assign(mud, {
     sendMsg: compose(updateSys, mud.sendMsg, checkForOpts, checkForUser),
     sendCreds: compose(updateSys, mud.sendCreds, checkForOpts, checkForUser),
-    checkCreds: compose(updateSys, mud.checkCreds, mud.checkForUser),
+    checkCreds: compose(updateSys, mud.checkCreds),
     createUser: compose(updateSys, mud.createUser, checkForOpts)
   })
 
